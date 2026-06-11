@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<style xmlns="http://purl.org/net/xbiblio/csl" version="1.0" default-locale="en-US" class="in-text" page-range-format="minimal">
+  <!-- This style was edited with the Visual CSL Editor (https://editor.citationstyles.org/codeEditor/) -->
+  <info>
+    <title>Custom: initials.lastname, ... for et-al, doi prefix</title>
+    <id>https://www.zotero.org/styles/custom-initials-dots-doi</id>
+    <updated>2026-06-11T08:46:53+00:00</updated>
+  </info>
+  <locale xml:lang="en">
+    <terms>
+      <term name="et-al">...</term>
+    </terms>
+  </locale>
+  <macro name="author">
+    <names variable="author" et-al-min="4" et-al-use-first="3">
+      <name initialize="true" initialize-with=". " name-as-sort-order="first" delimiter=", " delimiter-precedes-last="always"/>
+    </names>
+  </macro>
+  <macro name="year">
+    <date variable="issued">
+      <date-part name="year"/>
+    </date>
+  </macro>
+  <citation collapse="citation-number">
+    <sort>
+      <key variable="citation-number"/>
+    </sort>
+    <layout prefix="[" suffix="]" delimiter=",">
+      <text variable="citation-number"/>
+    </layout>
+  </citation>
+  <bibliography et-al-min="4" et-al-use-first="3" entry-spacing="0">
+    <layout suffix=".">
+      <text variable="citation-number" prefix="[" suffix="]"/>
+      <text macro="author"/>
+      <choose>
+        <if type="article-journal" match="any">
+          <group suffix=", ">
+            <text variable="title" suffix=", "/>
+            <text variable="container-title" suffix=", "/>
+            <text macro="year" suffix=", "/>
+            <text variable="volume" suffix=", "/>
+            <text variable="page"/>
+          </group>
+          <text value=", doi: "/>
+          <text variable="DOI"/>
+        </if>
+        <else>
+          <text variable="title" suffix=". "/>
+          <text variable="container-title" suffix=", "/>
+          <text macro="year" suffix=". "/>
+        </else>
+      </choose>
+    </layout>
+  </bibliography>
+</style>
