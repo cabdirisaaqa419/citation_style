@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <style xmlns="http://purl.org/net/xbiblio/csl" version="1.0" default-locale="en-US" class="in-text" page-range-format="minimal">
   <info>
-    <title>Custom: Initials.Lastname, ... for et-al, DOI with prefix</title>
+    <title>Custom: initials.lastname, ... for et-al, doi prefix</title>
     <id>https://www.zotero.org/styles/custom-initials-dots-doi</id>
     <updated>2026-06-11T12:00:00+00:00</updated>
   </info>
@@ -10,7 +10,6 @@
       <term name="et-al">...</term>
     </terms>
   </locale>
-  <!-- Author: Y. Imanbayev, Y. Tileuberdi, Y. Ongarbayev, ... -->
   <macro name="author">
     <names variable="author" et-al-min="4" et-al-use-first="3">
       <name initialize="true" initialize-with=". " name-as-sort-order="first" delimiter=", " delimiter-precedes-last="always"/>
@@ -19,19 +18,15 @@
   <macro name="year">
     <date variable="issued"><date-part name="year"/></date>
   </macro>
-  <!-- In-text citation: [43] -->
   <citation collapse="citation-number">
     <sort><key variable="citation-number"/></sort>
     <layout prefix="[" suffix="]" delimiter=",">
       <text variable="citation-number"/>
     </layout>
   </citation>
-  <!-- Bibliography entry -->
   <bibliography et-al-min="4" et-al-use-first="3" entry-spacing="0">
     <layout suffix=".">
-      <!-- Number and authors -->
       <text variable="citation-number" prefix="[" suffix="]"/> <text macro="author"/>
-      <!-- For journal articles (default case) -->
       <choose>
         <if type="article-journal" match="any">
           <group suffix=", ">
@@ -44,7 +39,6 @@
           <text value=", doi: "/>
           <text variable="DOI"/>
         </if>
-        <!-- Fallback for other types (books, chapters, etc.) – adjust as needed -->
         <else>
           <text variable="title" suffix=". "/>
           <text variable="container-title" suffix=", "/>
