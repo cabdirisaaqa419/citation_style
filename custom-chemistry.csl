@@ -1,15 +1,163 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<style xmlns="http://purl.org/net/xbiblio/csl" class="in-text" version="1.0" demote-non-dropping-particle="never">
-  <!-- This style was edited with the Visual CSL Editor (https://editor.citationstyles.org/codeEditor/) -->
+<style xmlns="http://purl.org/net/xbiblio/csl" page-range-format="minimal" class="in-text" version="1.0" demote-non-dropping-particle="sort-only" default-locale="en-US">
   <info>
-    <title>No Title</title>
-    <id>enter-unique-style-id-here</id>
-    <updated>2026-06-11T05:58:47+00:00</updated>
+    <title>Custom numeric style (initials.lastname, ... for et-al, doi:)</title>
+    <title-short>Custom Vancouver style</title-short>
+    <id>http://www.zotero.org/styles/custom-vancouver-initials-doi</id>
+    <link href="http://www.zotero.org/styles/elsevier-vancouver" rel="self"/>
+    <link href="http://www.elsevier.com/journals/energy/0360-5442/guide-for-authors#68000" rel="documentation"/>
+    <author>
+      <name>Modified from Richard Karnesky</name>
+      <email>example@example.com</email>
+    </author>
+    <category citation-format="numeric"/>
+    <summary>A custom numeric style with author initials, comma separated title/journal/year/volume/page, and doi: prefix</summary>
+    <updated>2026-06-11T08:07:56+00:00</updated>
+    <rights license="http://creativecommons.org/licenses/by-sa/3.0/">This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License</rights>
   </info>
-  <citation>
-    <layout/>
+  <!-- redefine et-al term to "..." -->
+  <locale xml:lang="en">
+    <terms>
+      <term name="et-al">...</term>
+    </terms>
+  </locale>
+  <!-- Authors: Initial. Lastname, comma separated, no "and", truncate after 3 authors with "..." -->
+  <macro name="author">
+    <names variable="author" et-al-min="4" et-al-use-first="3">
+      <name initialize="true" initialize-with=". " name-as-sort-order="first" delimiter=", " delimiter-precedes-last="always"/>
+      <label form="long" prefix=", "/>
+      <substitute>
+        <names variable="editor"/>
+        <names variable="translator"/>
+      </substitute>
+    </names>
+  </macro>
+  <macro name="editor">
+    <names variable="editor">
+      <name initialize="true" initialize-with=". " name-as-sort-order="first" delimiter=", " delimiter-precedes-last="always"/>
+      <label form="long" prefix=", " suffix="."/>
+    </names>
+  </macro>
+  <macro name="year-date">
+    <choose>
+      <if variable="issued">
+        <date variable="issued">
+          <date-part name="year"/>
+        </date>
+      </if>
+      <else>
+        <text term="no date" form="short"/>
+      </else>
+    </choose>
+  </macro>
+  <macro name="publisher">
+    <text variable="publisher-place" suffix=": " text-case="title"/>
+    <text variable="publisher" suffix="; "/>
+    <text macro="year-date"/>
+  </macro>
+  <macro name="edition">
+    <choose>
+      <if is-numeric="edition">
+        <group delimiter=" ">
+          <number variable="edition" form="ordinal"/>
+          <text term="edition" form="short"/>
+        </group>
+      </if>
+      <else>
+        <text variable="edition"/>
+      </else>
+    </choose>
+  </macro>
+  <!-- Access macro: only DOI, output as ", doi: " + DOI -->
+  <macro name="access">
+    <choose>
+      <if variable="DOI">
+        <text value=", doi: "/>
+        <text variable="DOI"/>
+      </if>
+    </choose>
+  </macro>
+  <!-- In-text citation: [number] -->
+  <citation collapse="citation-number">
+    <sort>
+      <key variable="citation-number"/>
+    </sort>
+    <layout prefix="[" suffix="]" delimiter=",">
+      <text variable="citation-number"/>
+    </layout>
   </citation>
-  <bibliography>
-    <layout/>
+  <!-- Bibliography entry: [number] space authors, title, journal, year, volume, page, doi: DOI. -->
+  <bibliography entry-spacing="0" second-field-align="flush" et-al-min="4" et-al-use-first="3">
+    <layout suffix=".">
+      <text variable="citation-number" prefix="[" suffix="]"/> <text macro="author" suffix=", "/>
+      <choose>
+        <!-- books, reports, etc. (kept mostly as original but with new author format) -->
+        <if type="bill book graphic legal_case legislation motion_picture report song" match="any">
+          <group delimiter=". ">
+            <text variable="title"/>
+            <text variable="volume" prefix="vol. "/>
+            <text macro="edition"/>
+            <text macro="publisher"/>
+          </group>
+        </if>
+        <!-- conference papers, chapters -->
+        <else-if type="chapter paper-conference" match="any">
+          <group delimiter=", ">
+            <group delimiter=". ">
+              <text variable="title"/>
+              <group>
+                <text term="in" text-case="sentence" suffix=": "/>
+                <text macro="editor"/>
+              </group>
+              <group delimiter=", ">
+                <text variable="container-title"/>
+                <text variable="volume" prefix="vol. "/>
+              </group>
+              <text macro="edition"/>
+            </group>
+            <text macro="publisher"/>
+            <group delimiter=" ">
+              <label variable="page" form="short" plural="never"/>
+              <text variable="page"/>
+            </group>
+          </group>
+        </else-if>
+        <!-- patents -->
+        <else-if type="patent">
+          <group delimiter=", ">
+            <group delimiter=". ">
+              <text variable="title"/>
+              <text variable="number"/>
+            </group>
+            <text macro="year-date"/>
+          </group>
+        </else-if>
+        <!-- theses -->
+        <else-if type="thesis">
+          <group delimiter=". ">
+            <text variable="title"/>
+            <text variable="genre"/>
+            <group delimiter=", ">
+              <text variable="publisher"/>
+              <text macro="year-date"/>
+            </group>
+          </group>
+        </else-if>
+        <!-- default: journal articles and similar -->
+        <else>
+          <group>
+            <text macro="author"/>
+            <text variable="title" suffix=", "/>
+            <text variable="container-title" suffix=", "/>
+            <text macro="year-date" suffix=", "/>
+            <group delimiter=", ">
+              <text variable="volume"/>
+              <text variable="page"/>
+            </group>
+            <text macro="access"/>
+          </group>
+        </else>
+      </choose>
+    </layout>
   </bibliography>
 </style>
